@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashley, will you be my Valentine? 💕</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #ffb3d9 0%, #ffd4e5 50%, #ffe6f0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Falling hearts animation */
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0;
+            animation: fall linear infinite;
+        }
+        
+        @keyframes fall {
+            0% {
+                top: -10%;
+                opacity: 0.8;
+            }
+            100% {
+                top: 110%;
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 50px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(255, 105, 180, 0.2);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .page {
+            display: none;
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            color: #ff69b4;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-family: 'Caveat', cursive;
+        }
+        
+        .message {
+            color: #666;
+            font-size: 1.3em;
+            line-height: 1.6;
+            margin: 30px 0;
+            font-weight: 500;
+        }
+        
+        .big-heart {
+            font-size: 4em;
+            margin: 20px 0;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        button {
+            background: linear-gradient(135deg, #ff69b4 0%, #ff85c1 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.1em;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.25);
+            margin-top: 20px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(-1px);
+        }
+        
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ffd4e5;
+            transition: all 0.3s ease;
+        }
+        
+        .dot.active {
+            background: #ff69b4;
+            transform: scale(1.3);
+        }
+        
+        .final-question {
+            font-size: 2.2em;
+            color: #ff69b4;
+            font-weight: 700;
+            margin: 30px 0;
+            font-family: 'Caveat', cursive;
+        }
+        
+        .name {
+            color: #ff1493;
+            font-weight: 700;
+        }
+        
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .yes-button {
+            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .yes-button.grow {
+            transform: scale(1.2);
+            padding: 20px 50px;
+            font-size: 1.3em;
+        }
+        
+        .no-button {
+            background: linear-gradient(135deg, #b0b0b0 0%, #888888 100%);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .no-button.shrink {
+            transform: scale(0.7);
+            padding: 12px 28px;
+            font-size: 0.9em;
+        }
+        
+        .celebration {
+            display: none;
+            font-size: 3em;
+            margin: 20px 0;
+        }
+        
+        .celebration.active {
+            display: block;
+            animation: bounce 0.6s ease-in-out;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .cute-emoji {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+        
+        .cute-gif {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin: 20px auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Page 0: Welcome -->
+        <div class="page active" id="page0">
+            <div class="cute-emoji">💌</div>
+            <h1>Hey <span class="name">Ashley</span>!</h1>
+            <p class="message">I have something to tell you...</p>
+            <button onclick="nextPage(1)">Open 💕</button>
+        </div>
+        
+        <!-- Page 1: First reason -->
+        <div class="page" id="page1">
+            <div class="big-heart">💗</div>
+            <p class="message">Because you haven't run away from my weird sense of humor yet</p>
+            <button onclick="nextPage(2)">Continue ✨</button>
+            <div class="progress-dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+        
+        <!-- Page 2: Second reason -->
+        <div class="page" id="page2">
+            <div class="big-heart">💖</div>
+            <p class="message">Because these past few weeks have been my favorite</p>
+            <button onclick="nextPage(3)">Continue ✨</button>
+            <div class="progress-dots">
+                <div class="dot active"></div>
+                <div class="dot active"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+        
+        <!-- Page 3: Third reason -->
+        <div class="page" id="page3">
+            <div class="big-heart">💝</div>
+            <p class="message">Because I want to keep making memories with you</p>
+            <button onclick="nextPage(4)">Continue ✨</button>
+            <div class="progress-dots">
+                <div class="dot active"></div>
+                <div class="dot active"></div>
+                <div class="dot active"></div>
+            </div>
+        </div>
+        
+        <!-- Page 4: The question -->
+        <div class="page" id="page4">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbTR0aGJ2OXg4bTRrNnB0ZGRoMnBhOG1iZDFqZ2I4cWRvNG9qOTVmYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MDJ9IbxxvDUQM/giphy.gif" 
+                 alt="Cute cat" 
+                 class="cute-gif" 
+                 id="questionGif">
+            <h1><span class="name">Ashley</span></h1>
+            <p class="final-question">Will you be my Valentine?</p>
+            <div class="button-container">
+                <button class="yes-button" onclick="celebrate()">Yes! 💕</button>
+                <button class="no-button" id="noButton" onmouseover="handleNoHover()" onclick="handleNoClick()">No</button>
+            </div>
+        </div>
+        
+        <!-- Page 5: Celebration -->
+        <div class="page" id="page5">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXN3YWE1aGVhZWE2aGJ0YzVzdGd0OGRkdnh6N2Y2MXRoNGhsanB2ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/UMon0fuimoAN9ueUNP/giphy.gif" 
+                 alt="Happy celebration" 
+                 class="cute-gif">
+            <h1>Yay!!!</h1>
+            <p class="message">You just made me the happiest person! 🥰</p>
+            <div class="cute-emoji">💑</div>
+        </div>
+    </div>
+
+    <script>
+        // No button responses that get progressively more desperate
+        const noResponses = [
+            "No",
+            "Are you sure?",
+            "Really?",
+            "Think again!",
+            "Please? 🥺",
+            "Pretty please?",
+            "You're breaking my heart 💔",
+            "Last chance!",
+            "Okay but seriously...",
+            "Fine I'll stop asking..."
+        ];
+        
+        // GIFs that change when No is clicked
+        const sadGifs = [
+            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbTR0aGJ2OXg4bTRrNnB0ZGRoMnBhOG1iZDFqZ2I4cWRvNG9qOTVmYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MDJ9IbxxvDUQM/giphy.gif",
+            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2M1OGQ0ODRkYmQ5YzU4YzJlNjNhMjg4ZjI2YjI4YmY4ZjJhMzI2YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L95W4wv8nnb9K/giphy.gif",
+            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXJnZWN2aGR4YjV6cDFjYnk3Zm1qZHBiMnc2OGxtNWxvZ2V6ZG1uaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ISOckXUybVfQ4/giphy.gif"
+        ];
+        
+        let noClickCount = 0;
+        let yesButtonScale = 1;
+        let noButtonScale = 1;
+        
+        // Create falling hearts
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = Math.random() > 0.5 ? '💕' : '💗';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 8000);
+        }
+        
+        // Create hearts continuously
+        setInterval(createHeart, 300);
+        
+        // Initial hearts
+        for (let i = 0; i < 10; i++) {
+            setTimeout(createHeart, i * 200);
+        }
+        
+        function nextPage(pageNum) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById('page' + pageNum).classList.add('active');
+        }
+        
+        function handleNoHover() {
+            const noButton = document.getElementById('noButton');
+            const yesButton = document.querySelector('.yes-button');
+            
+            // Make yes button bigger and no button smaller
+            yesButtonScale += 0.1;
+            noButtonScale -= 0.05;
+            
+            yesButton.style.transform = `scale(${yesButtonScale})`;
+            noButton.style.transform = `scale(${Math.max(noButtonScale, 0.4)})`;
+            
+            // Move the no button
+            const container = noButton.parentElement;
+            const containerRect = container.getBoundingClientRect();
+            const buttonRect = noButton.getBoundingClientRect();
+            
+            const maxX = containerRect.width - buttonRect.width - 40;
+            const maxY = 100;
+            
+            const randomX = Math.random() * maxX - maxX/2;
+            const randomY = Math.random() * maxY - 50;
+            
+            noButton.style.position = 'relative';
+            noButton.style.left = randomX + 'px';
+            noButton.style.top = randomY + 'px';
+        }
+        
+        function handleNoClick() {
+            const noButton = document.getElementById('noButton');
+            const gif = document.getElementById('questionGif');
+            
+            noClickCount++;
+            
+            // Change button text
+            if (noClickCount < noResponses.length) {
+                noButton.textContent = noResponses[noClickCount];
+            }
+            
+            // Change GIF to sad ones
+            const gifIndex = Math.min(noClickCount - 1, sadGifs.length - 1);
+            if (gifIndex >= 0) {
+                gif.src = sadGifs[gifIndex];
+            }
+            
+            handleNoHover();
+        }
+        
+        function celebrate() {
+            nextPage(5);
+            
+            // Confetti explosion!
+            const duration = 3 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+            
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+            
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+                
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+                
+                const particleCount = 50 * (timeLeft / duration);
+                
+                confetti({
+                    ...defaults,
+                    particleCount,
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                    colors: ['#ff69b4', '#ff1493', '#ffc0cb', '#ffb6c1']
+                });
+                confetti({
+                    ...defaults,
+                    particleCount,
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                    colors: ['#ff69b4', '#ff1493', '#ffc0cb', '#ffb6c1']
+                });
+            }, 250);
+            
+            // Extra celebration hearts
+            for (let i = 0; i < 30; i++) {
+                setTimeout(createHeart, i * 100);
+            }
+        }
+    </script>
+</body>
+</html>

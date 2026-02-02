@@ -1,95 +1,395 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Valentines Day</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .gradient-background {
-      background: rgb(255, 208, 229);
-      background: linear-gradient(180deg, rgba(255, 208, 229, 1) 0%, rgba(255, 232, 242, 1) 36%, rgba(255, 255, 255, 1) 100%);
-    }
-
-    .bounce2 {
-      animation: bounce2 2s ease infinite;
-    }
-
-    @keyframes bounce2 {
-      0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>For Ashley 💕</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --pink-soft: #f8e1e8;
+        --pink-medium: #e8a0b4;
+        --pink-dark: #c4647a;
+        --pink-accent: #d4758a;
+        --text-dark: #5a4a4e;
+        --text-light: #7a6a6e;
+        --white: #fff;
       }
-      40% {
-        transform: translateY(-20px);
-      }
-      60% {
-        transform: translateY(-10px);
-      }
-    }
-  </style>
-</head>
-<body class="gradient-background">
-  <div class="flex items-center justify-center h-screen">
-    <div class="flex flex-col items-center p-4">
-      <img id="imageDisplay" src="./images/image1.gif" alt="Cute kitten with flowers" class="rounded-md h-[300px]" style="object-fit: cover;" />
-      <h2 id="valentineQuestion" class="text-4xl font-bold italic text-[#bd1e59] my-4">Will you be my Valentine?</h2>
-      <div class="flex gap-4 pt-[20px] items-center" id="responseButtons">
-        <button id="yesButton"
-          class="bounce2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium disabled:pointer-events-none disabled:opacity-50 hover:bg-green-400 min-h-12 min-w-[75px] px-4 py-2 bg-green-500 text-white transition">
-          Yes
-        </button>
-        <button id="noButton"
-          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium transition disabled:pointer-events-none disabled:opacity-50 hover:bg-red-700 h-12 min-w-[75px] w-auto px-4 py-2 bg-red-500 text-white">
-          No
-        </button>
-      </div>
-    </div>
-  </div>
 
-  <script type="module">
-    import confetti from 'https://cdn.skypack.dev/canvas-confetti';
-    const yesButton = document.getElementById('yesButton');
-    const noButton = document.getElementById('noButton');
-    const imageDisplay = document.getElementById('imageDisplay');
-    const valentineQuestion = document.getElementById('valentineQuestion');
-    const responseButtons = document.getElementById('responseButtons');
-  
-    let noClickCount = 0;
-    let buttonHeight = 48; // Starting height in pixels
-    let buttonWidth = 80;
-    let fontSize = 20; // Starting font size in pixels
-    const imagePaths = [
-      "./images/image1.gif",
-      "./images/image2.gif",
-      "./images/image3.gif",
-      "./images/image4.gif",
-      "./images/image5.gif",
-      "./images/image6.gif",
-      "./images/image7.gif"
-    ];
-  
-    noButton.addEventListener('click', function() {
-      if (noClickCount < 5) {
-        noClickCount++;
-        imageDisplay.src = imagePaths[noClickCount];
-        buttonHeight += 35; // Increase height by 5px on each click
-        buttonWidth += 35;
-        fontSize += 25; // Increase font size by 1px on each click
-        yesButton.style.height = `${buttonHeight}px`; // Update button height
-        yesButton.style.width = `${buttonWidth}px`;
-        yesButton.style.fontSize = `${fontSize}px`; // Update font size
-        if (noClickCount < 6) {
-          noButton.textContent = ["No", "Are you sure?", "Pookie please", "Don't do this to me :(", "You're breaking my heart", "I'm gonna cry..."][noClickCount];
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Quicksand", sans-serif;
+        background: var(--pink-soft);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-x: hidden;
+      }
+
+      .heart {
+        position: fixed;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0;
+        animation: drift linear infinite;
+      }
+
+      @keyframes drift {
+        0% {
+          top: -5%;
+          opacity: 0.6;
+          transform: translateX(0) rotate(0deg);
+        }
+        100% {
+          top: 105%;
+          opacity: 0;
+          transform: translateX(20px) rotate(15deg);
         }
       }
-    });
-  
-    yesButton.addEventListener('click', () => {
-      imageDisplay.src = './images/image7.gif'; // Change to image7.gif
-      valentineQuestion.textContent = "Yayyy!! :3"; // Change the question text
-      responseButtons.style.display = 'none'; // Hide both buttons
-      confetti(); // Trigger confetti animation
-    });
-  </script>  
-</body>
+
+      .card {
+        background: var(--white);
+        border-radius: 16px;
+        padding: 48px 40px;
+        max-width: 420px;
+        width: 92%;
+        text-align: center;
+        box-shadow: 0 4px 24px rgba(196, 100, 122, 0.12);
+        position: relative;
+        z-index: 10;
+      }
+
+      .page {
+        display: none;
+      }
+
+      .page.active {
+        display: block;
+        animation: enter 0.4s ease-out;
+      }
+
+      @keyframes enter {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .icon {
+        font-size: 2.5rem;
+        margin-bottom: 16px;
+      }
+
+      .icon-heart {
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.08);
+        }
+      }
+
+      h1 {
+        color: var(--pink-dark);
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: -0.02em;
+      }
+
+      .highlight {
+        color: var(--pink-accent);
+      }
+
+      .text {
+        color: var(--text-light);
+        font-size: 1.05rem;
+        line-height: 1.6;
+        margin: 16px 0 24px;
+        font-weight: 500;
+      }
+
+      .reasons {
+        text-align: left;
+        margin: 24px 0;
+      }
+
+      .reason {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px 0;
+        color: var(--text-dark);
+        font-size: 0.95rem;
+        line-height: 1.5;
+        border-bottom: 1px solid var(--pink-soft);
+      }
+
+      .reason:last-child {
+        border-bottom: none;
+      }
+
+      .reason-icon {
+        color: var(--pink-medium);
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      .gif {
+        width: 180px;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin: 0 auto 20px;
+        display: block;
+      }
+
+      .question {
+        font-size: 1.5rem;
+        color: var(--pink-dark);
+        font-weight: 700;
+        margin: 16px 0 24px;
+      }
+
+      .btn {
+        background: var(--pink-medium);
+        color: var(--white);
+        border: none;
+        padding: 12px 32px;
+        font-size: 0.95rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: inherit;
+        font-weight: 600;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+      }
+
+      .btn:hover {
+        background: var(--pink-dark);
+        transform: translateY(-1px);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .buttons {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        align-items: center;
+        min-height: 120px;
+        flex-wrap: wrap;
+      }
+
+      .btn-yes {
+        background: #7cb58a;
+        transition: all 0.25s ease;
+      }
+
+      .btn-yes:hover {
+        background: #5fa36d;
+      }
+
+      .btn-no {
+        background: #bbb;
+        font-size: 0.85rem;
+        padding: 10px 24px;
+        transition: all 0.15s ease;
+      }
+
+      .btn-no:hover {
+        background: #aaa;
+      }
+
+      .celebration .gif {
+        width: 200px;
+        height: 200px;
+      }
+
+      .celebration-emoji {
+        font-size: 2rem;
+        margin-top: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="page active" id="page0">
+        <div class="icon">💌</div>
+        <h1>Hey <span class="highlight">Ashley</span></h1>
+        <p class="text">I have something I want to ask you...</p>
+        <button class="btn" onclick="nextPage(1)">Open</button>
+      </div>
+
+      <div class="page" id="page1">
+        <div class="icon icon-heart">💕</div>
+        <h1>A few reasons why</h1>
+        <div class="reasons">
+          <div class="reason">
+            <span class="reason-icon">💔</span>
+            <span>You haven't run away from my weird sense of humor yet</span>
+          </div>
+          <div class="reason">
+            <span class="reason-icon">😭</span>
+            <span>These past few weeks have been my favorite</span>
+          </div>
+          <div class="reason">
+            <span class="reason-icon">🤩</span>
+            <span>I want to keep making memories with you</span>
+          </div>
+        </div>
+        <button class="btn" onclick="nextPage(2)">Continue</button>
+      </div>
+
+      <div class="page" id="page2">
+        <img src="./images/image1.gif" alt="" class="gif" id="questionGif" />
+        <h1 class="highlight">Ashley</h1>
+        <p class="question">Will you be my Valentine?</p>
+        <div class="buttons" id="buttonContainer">
+          <button class="btn btn-yes" id="yesButton" onclick="celebrate()">
+            Yes!
+          </button>
+          <button class="btn btn-no" id="noButton">No</button>
+        </div>
+      </div>
+
+      <div class="page celebration" id="page3">
+        <img src="./images/image7.gif" alt="" class="gif" />
+        <h1>Yay!!! 🎉</h1>
+        <p class="text">You just made me so happy!</p>
+        <div class="celebration-emoji">🙃</div>
+      </div>
+    </div>
+
+    <script>
+      const noResponses = [
+        "No",
+        "Are you sure?",
+        "Pookie please",
+        "Don't do this :(",
+        "You're breaking my heart",
+        "I'm gonna cry...",
+      ];
+
+      const imagePaths = [
+        "./images/image1.gif",
+        "./images/image2.gif",
+        "./images/image3.gif",
+        "./images/image4.gif",
+        "./images/image5.gif",
+        "./images/image6.gif",
+      ];
+
+      let noClickCount = 0;
+      let yesScale = 1;
+      let noScale = 1;
+
+      const noButton = document.getElementById("noButton");
+      const yesButton = document.getElementById("yesButton");
+      const buttonContainer = document.getElementById("buttonContainer");
+      const questionGif = document.getElementById("questionGif");
+
+      // No button runs away on hover
+      noButton.addEventListener("mouseenter", moveNoButton);
+      noButton.addEventListener("touchstart", moveNoButton);
+
+      function moveNoButton() {
+        // Random offset from its natural position
+        const maxX = 80;
+        const maxY = 50;
+
+        const randomX = (Math.random() - 0.5) * 2 * maxX;
+        const randomY = (Math.random() - 0.5) * 2 * maxY;
+
+        noButton.style.transform = `translate(${randomX}px, ${randomY}px) scale(${noScale})`;
+
+        // Shrink no button and grow yes button each hover
+        noScale = Math.max(0.5, noScale - 0.05);
+        yesScale += 0.08;
+
+        yesButton.style.transform = `scale(${yesScale})`;
+        noButton.style.fontSize = `${Math.max(0.7, 0.85 - noClickCount * 0.03)}rem`;
+      }
+
+      noButton.addEventListener("click", function () {
+        if (noClickCount < 5) {
+          noClickCount++;
+          questionGif.src = imagePaths[noClickCount];
+          noButton.textContent = noResponses[noClickCount];
+          moveNoButton();
+        }
+      });
+
+      function createHeart() {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = ["♡", "❤", "💕"][Math.floor(Math.random() * 3)];
+        heart.style.left = Math.random() * 100 + "%";
+        heart.style.animationDuration = Math.random() * 4 + 5 + "s";
+        heart.style.fontSize = Math.random() * 12 + 14 + "px";
+        heart.style.color = `hsl(${340 + Math.random() * 20}, ${60 + Math.random() * 20}%, ${70 + Math.random() * 15}%)`;
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 9000);
+      }
+
+      setInterval(createHeart, 600);
+      for (let i = 0; i < 8; i++) setTimeout(createHeart, i * 200);
+
+      function nextPage(num) {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById("page" + num).classList.add("active");
+      }
+
+      function celebrate() {
+        nextPage(3);
+
+        const end = Date.now() + 3500;
+        const colors = ["#e8a0b4", "#c4647a", "#f8e1e8", "#d4758a"];
+
+        (function frame() {
+          confetti({
+            particleCount: 3,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            colors: colors,
+          });
+          confetti({
+            particleCount: 3,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            colors: colors,
+          });
+          if (Date.now() < end) requestAnimationFrame(frame);
+        })();
+
+        for (let i = 0; i < 25; i++) setTimeout(createHeart, i * 100);
+      }
+    </script>
+  </body>
 </html>
